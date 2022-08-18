@@ -1,56 +1,90 @@
-
 const Engine = Matter.Engine;
 const World = Matter.World;
 const Bodies = Matter.Bodies;
-const Body = Matter.Body;
+const Constraint = Matter.Constraint;
 
-let engine;
-let world;
-var ball;
-var ground;
-var wedge;
-var angle=60;
-var poly;
-var boxes=[];
+var engine, world;
+var canvas;
+var palyer, playerBase;
+var computer, computerBase;
+
+var arrow;
+
 
 function setup() {
-  createCanvas(400,400);
+  canvas = createCanvas(windowWidth, windowHeight);
 
   engine = Engine.create();
   world = engine.world;
-  var option={
-    isStatic:true
-  };
-  ground=Bodies.rectangle(100,300,400,20,option);
-  World.add(world,ground);
-  //box1 = new Box(200,100,50,50);
+
+  playerBase = new PlayerBase(300, random(450, height - 300), 180, 150);
+  player = new Player(285, playerBase.body.position.y - 153, 50, 180);
+  playerArcher = new PlayerArcher(
+    340,
+    playerBase.body.position.y - 180,
+    120,
+    120
+  );
+
+  computerBase = new ComputerBase(
+    width - 300,
+    random(450, height - 300),
+    180,
+    150
+  );
+  computer = new Computer(
+    width - 280,
+    computerBase.body.position.y - 153,
+    50,
+    180
+  );
+  computerArcher = new ComputerArcher(
+    width - 340,
+    computerBase.body.position.y - 180,
+    120,
+    120
+  );
   
-
-  rectMode(CENTER);
-  ellipseMode(RADIUS);
-}
-function mousePressed(){
-  boxes.push(
-    
-    //new Box(50,50,50,50)
-    
-    new Box(mouseX,mouseY,50,50)
-
-    //new Box(50,50,mouseX,mouseY)
-    
-    //new Box(mouseY,mouseX,50,50)  
-    
-    )
+  arrow = new PlayerArrow(playerArcher.body.position.x, playerArcher.body.position.y, 100, 10);
+  
 }
 
-function draw() 
-{
-  background(51);
-  rect(ground.position.x,ground.position.y,400,10);
+function draw() {
+  background(180);
+
   Engine.update(engine);
- for(var i=0;i<boxes.length;i++) {
- boxes[i].show();}
+
+  // TÍTULO
+  fill("#FFFF");
+  textAlign("center");
+  textSize(40);
+  text("ARQUEIRO ÉPICO", width / 2, 100);
+
+ 
+  playerBase.display();
+  player.display();
   
+
+  computerBase.display();
+  computer.display();
   
+  playerArcher.display();
+  computerArcher.display()
+  
+  // if(keyCode === 32){
+  //   arrow.display()
+  //   arrow.shoot(playerArcher);
+  //  }
+
+  //  if(keyCode === 32){
+  //   arrow.shoot(playerArcher.body.angle);
+  //  }
+   
+   if(keyCode === 32){
+    arrow.display()
+    arrow.shoot(playerArcher.body.angle);
+   }
 }
+
+
 
